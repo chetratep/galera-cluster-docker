@@ -1,0 +1,21 @@
+[galera]
+wsrep_on                 = ON
+wsrep_provider           = /usr/lib/galera/libgalera_smm.so
+wsrep_cluster_name       = "MariaDB Galera Cluster"
+#各サーバのIPアドレスを記載
+wsrep_cluster_address    = gcomm://172.99.10.1,172.99.10.2,172.99.10.3
+#自サーバのIPアドレスを記載
+wsrep_node_address       = 172.99.10.3
+#今回はsst_methodはmariabackupを利用する
+wsrep_sst_method         = "mariabackup"
+wsrep_sst_auth           = 'mariabackup:mypassword'
+wsrep_slave_threads      = 4
+#node_nameはhost名と同じにする
+wsrep_node_name          ="db03"
+wsrep_sst_donor          ="db01,db02,db03"
+[mysqld]
+default_storage_engine     = InnoDB
+binlog_format              = ROW
+log_bin                    = /var/log/mysql/mysql-bin
+innodb_autoinc_lock_mode   = 2
+innodb_locks_unsafe_for_binlog = 1

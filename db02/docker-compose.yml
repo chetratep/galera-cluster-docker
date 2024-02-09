@@ -1,0 +1,34 @@
+version: '3.7'
+services:
+  db:
+    image: mariadb:10.6.15
+    volumes:
+      - "./db.cnf:/etc/mysql/conf.d/db.cnf"
+      - "db-data:/var/lib/mysql"
+      - "db-log:/var/log/mysql"
+    environment:
+      - TZ=Asia/Tokyo
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes
+    ports:
+      - "23306:3306"
+    networks:
+      cluster-network:
+        ipv4_address: 172.99.10.2
+volumes:
+  db-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/mysql
+      o: bind
+  db-log:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/log
+      o: bind
+networks:
+  cluster-network:
+    driver: bridge
+    name: galera-cluster-network
+    external: true
